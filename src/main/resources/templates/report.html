@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Year-wise Report – Virtual Lab Report System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div class="app-layout">
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">🧪</div>
+            <h2>Virtual Lab<br/>Report System</h2>
+            <p>Academic Tracking Platform</p>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-label">Main Menu</div>
+            <a th:href="@{/dashboard}" class="nav-item"><span class="nav-icon">📊</span> Dashboard</a>
+            <a th:href="@{/records}"   class="nav-item"><span class="nav-icon">📋</span> All Records</a>
+            <a th:href="@{/add}"       class="nav-item"><span class="nav-icon">➕</span> Add Session</a>
+            <a th:href="@{/report}"    class="nav-item active"><span class="nav-icon">📈</span> Year-wise Report</a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar">A</div>
+                <div>
+                    <div class="user-name" th:text="${username}">Admin</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+            </div>
+            <a th:href="@{/logout}" class="btn btn-logout">🚪 Logout</a>
+        </div>
+    </aside>
+
+    <!-- ── Main Content ── -->
+    <main class="main-content">
+        <div class="topbar">
+            <div>
+                <h1>Year-wise Report</h1>
+                <p>Aggregated lab session statistics grouped by academic year</p>
+            </div>
+            <a th:href="@{/records}" class="btn btn-secondary">📋 View All Records</a>
+        </div>
+
+        <!-- Grand Total Stats -->
+        <div class="report-stat-grid">
+            <div class="report-stat">
+                <div class="val" th:text="${totalSessions}">0</div>
+                <div class="lbl">🗂️ Total Sessions (All Years)</div>
+            </div>
+            <div class="report-stat">
+                <div class="val" th:text="${totalStudents}">0</div>
+                <div class="lbl">👨‍🎓 Total Students (All Years)</div>
+            </div>
+            <div class="report-stat">
+                <div class="val" th:text="${#lists.size(report)}">0</div>
+                <div class="lbl">📅 Academic Years Tracked</div>
+            </div>
+        </div>
+
+        <!-- Report Table -->
+        <div class="card">
+            <div class="card-header">
+                <h3>📈 Detailed Year-wise Breakdown</h3>
+            </div>
+
+            <div th:if="${#lists.isEmpty(report)}" class="empty-state">
+                <div class="empty-icon">📭</div>
+                <p>No data available. <a th:href="@{/add}" style="color:var(--primary-light);">Add some lab sessions first!</a></p>
+            </div>
+
+            <table class="data-table" th:if="${!#lists.isEmpty(report)}">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Academic Year</th>
+                        <th>Total Sessions</th>
+                        <th>Total Students Attended</th>
+                        <th>Avg Students / Session</th>
+                        <th>Share of All Sessions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="row, iter : ${report}">
+                        <td th:text="${iter.count}">1</td>
+                        <td>
+                            <a th:href="@{/report/{year}(year=${row[0]})}">
+                                <span class="badge badge-blue" style="cursor:pointer; display:inline-block; transition:0.2s;" th:text="${row[0]}">2024-25</span>
+                            </a>
+                        </td>
+                        <td>
+                            <strong th:text="${row[1]}">0</strong>
+                        </td>
+                        <td th:text="${row[2] != null ? row[2] : 0}">0</td>
+                        <td th:text="${row[1] > 0 && row[2] != null ? #numbers.formatDecimal(row[2] / row[1], 1, 1) : '0.0'}">0.0</td>
+                        <td>
+                            <div style="display:flex;align-items:center;gap:10px;">
+                                <div class="progress-bar-wrap" style="min-width:80px;">
+                                    <div class="progress-bar-fill"
+                                         th:style="'width:' + (${totalSessions > 0 ? row[1] * 100 / totalSessions : 0}) + '%'">
+                                    </div>
+                                </div>
+                                <span th:text="${totalSessions > 0 ? #numbers.formatDecimal(row[1] * 100.0 / totalSessions, 1, 1) + '%' : '0%'}">0%</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr style="font-weight:700;border-top:2px solid var(--border);">
+                        <td colspan="2" style="color:var(--text-muted);">Grand Total</td>
+                        <td th:text="${totalSessions}">0</td>
+                        <td th:text="${totalStudents}">0</td>
+                        <td th:text="${totalSessions > 0 ? #numbers.formatDecimal(totalStudents * 1.0 / totalSessions, 1, 1) : '0.0'}">0.0</td>
+                        <td>100%</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>
