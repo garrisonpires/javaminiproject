@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-VirtualLabApplication<virtual-lab-report>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.virtuallab.VirtualLabApplication",
+            "projectName": "virtual-lab-report",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
