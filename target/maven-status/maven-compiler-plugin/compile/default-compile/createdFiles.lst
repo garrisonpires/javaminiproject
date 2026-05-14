@@ -1,8 +1,0 @@
-com\virtuallab\VirtualLabApplication.class
-com\virtuallab\util\DataSeeder.class
-com\virtuallab\model\LabSession.class
-com\virtuallab\controller\LabSessionController.class
-com\virtuallab\dto\MonthlyUsageDTO.class
-com\virtuallab\repository\LabSessionRepository.class
-com\virtuallab\controller\LoginController.class
-com\virtuallab\model\Student.class
