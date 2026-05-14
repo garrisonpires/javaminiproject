@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${isEdit} ? 'Edit Session' : 'Add Session'">Add Session – Virtual Lab Report System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div class="app-layout">
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">🧪</div>
+            <h2>Virtual Lab<br/>Report System</h2>
+            <p>Academic Tracking Platform</p>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-label">Main Menu</div>
+            <a th:href="@{/dashboard}" class="nav-item"><span class="nav-icon">📊</span> Dashboard</a>
+            <a th:href="@{/records}"   class="nav-item"><span class="nav-icon">📋</span> All Records</a>
+            <a th:href="@{/add}"       class="nav-item active"><span class="nav-icon">➕</span> Add Session</a>
+            <a th:href="@{/report}"    class="nav-item"><span class="nav-icon">📈</span> Year-wise Report</a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar">A</div>
+                <div>
+                    <div class="user-name" th:text="${username}">Admin</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+            </div>
+            <a th:href="@{/logout}" class="btn btn-logout">🚪 Logout</a>
+        </div>
+    </aside>
+
+    <!-- ── Main Content ── -->
+    <main class="main-content">
+        <div class="topbar">
+            <div>
+                <h1 th:text="${isEdit} ? '✏️ Edit Lab Session' : '➕ Add Lab Session'">Add Lab Session</h1>
+                <p th:text="${isEdit} ? 'Update the details of an existing session' : 'Record a new virtual lab conduct session'">Fill in the details below</p>
+            </div>
+            <a th:href="@{/records}" class="btn btn-secondary">← Back to Records</a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 th:text="${isEdit} ? '🖊️ Edit Session Details' : '📝 New Session Details'">Session Details</h3>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/save}" method="post">
+
+                    <!-- Hidden ID for edit mode -->
+                    <input type="hidden" name="id" th:if="${isEdit}" th:value="${labSession.id}"/>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label class="form-label" for="academicYear">Academic Year *</label>
+                            <select id="academicYear" class="form-control" name="academicYear" required>
+                                <option value="" disabled th:selected="${labSession.academicYear == null}">Select Academic Year</option>
+                                <option th:each="yr : ${academicYears}"
+                                        th:value="${yr}"
+                                        th:text="${yr}"
+                                        th:selected="${labSession.academicYear == yr}"></option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="subjectName">Subject Name *</label>
+                            <input id="subjectName" class="form-control" type="text" name="subjectName"
+                                   placeholder="e.g. Data Structures Lab"
+                                   th:value="${labSession.subjectName}" required/>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="labName">Lab Name *</label>
+                            <input id="labName" class="form-control" type="text" name="labName"
+                                   placeholder="e.g. Computer Lab A"
+                                   th:value="${labSession.labName}" required/>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="facultyInCharge">Faculty In Charge *</label>
+                            <input id="facultyInCharge" class="form-control" type="text" name="facultyInCharge"
+                                   placeholder="e.g. Dr. Sharma"
+                                   th:value="${labSession.facultyInCharge}" required/>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="dateOfConduct">Date of Conduct *</label>
+                            <input id="dateOfConduct" class="form-control" type="date" name="dateOfConduct"
+                                   th:value="${labSession.dateOfConduct != null ? #temporals.format(labSession.dateOfConduct,'yyyy-MM-dd') : ''}"
+                                   required/>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="numberOfStudents">Number of Students *</label>
+                            <input id="numberOfStudents" class="form-control" type="number"
+                                   name="numberOfStudents" min="1" max="500"
+                                   placeholder="e.g. 60"
+                                   th:value="${labSession.numberOfStudents}" required/>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="status">Status *</label>
+                            <select id="status" class="form-control" name="status" required>
+                                <option value="" disabled>Select status</option>
+                                <option value="Completed"
+                                        th:selected="${labSession.status == 'Completed'}">Completed</option>
+                                <option value="Ongoing"
+                                        th:selected="${labSession.status == 'Ongoing'}">Ongoing</option>
+                            </select>
+                        </div>
+
+                    </div><!-- /form-grid -->
+
+                    <div style="display:flex;gap:12px;margin-top:28px;">
+                        <button type="submit" class="btn btn-primary">
+                            <span th:text="${isEdit} ? '💾 Update Session' : '➕ Save Session'">Save</span>
+                        </button>
+                        <a th:href="@{/records}" class="btn btn-secondary">✖ Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
