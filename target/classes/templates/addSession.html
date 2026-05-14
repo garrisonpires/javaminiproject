@@ -53,18 +53,18 @@
                 <form th:action="@{/save}" method="post">
 
                     <!-- Hidden ID for edit mode -->
-                    <input type="hidden" name="id" th:if="${isEdit}" th:value="${session.id}"/>
+                    <input type="hidden" name="id" th:if="${isEdit}" th:value="${labSession.id}"/>
 
                     <div class="form-grid">
 
                         <div class="form-group">
                             <label class="form-label" for="academicYear">Academic Year *</label>
                             <select id="academicYear" class="form-control" name="academicYear" required>
-                                <option value="" disabled th:selected="${session.academicYear == null}">Select Academic Year</option>
+                                <option value="" disabled th:selected="${labSession.academicYear == null}">Select Academic Year</option>
                                 <option th:each="yr : ${academicYears}"
                                         th:value="${yr}"
                                         th:text="${yr}"
-                                        th:selected="${session.academicYear == yr}"></option>
+                                        th:selected="${labSession.academicYear == yr}"></option>
                             </select>
                         </div>
 
@@ -72,27 +72,27 @@
                             <label class="form-label" for="subjectName">Subject Name *</label>
                             <input id="subjectName" class="form-control" type="text" name="subjectName"
                                    placeholder="e.g. Data Structures Lab"
-                                   th:value="${session.subjectName}" required/>
+                                   th:value="${labSession.subjectName}" required/>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label" for="labName">Lab Name *</label>
                             <input id="labName" class="form-control" type="text" name="labName"
                                    placeholder="e.g. Computer Lab A"
-                                   th:value="${session.labName}" required/>
+                                   th:value="${labSession.labName}" required/>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label" for="facultyInCharge">Faculty In Charge *</label>
                             <input id="facultyInCharge" class="form-control" type="text" name="facultyInCharge"
                                    placeholder="e.g. Dr. Sharma"
-                                   th:value="${session.facultyInCharge}" required/>
+                                   th:value="${labSession.facultyInCharge}" required/>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label" for="dateOfConduct">Date of Conduct *</label>
                             <input id="dateOfConduct" class="form-control" type="date" name="dateOfConduct"
-                                   th:value="${session.dateOfConduct != null ? #temporals.format(session.dateOfConduct,'yyyy-MM-dd') : ''}"
+                                   th:value="${labSession.dateOfConduct != null ? #temporals.format(labSession.dateOfConduct,'yyyy-MM-dd') : ''}"
                                    required/>
                         </div>
 
@@ -101,7 +101,7 @@
                             <input id="numberOfStudents" class="form-control" type="number"
                                    name="numberOfStudents" min="1" max="500"
                                    placeholder="e.g. 60"
-                                   th:value="${session.numberOfStudents}" required/>
+                                   th:value="${labSession.numberOfStudents}" required/>
                         </div>
 
                         <div class="form-group">
@@ -109,9 +109,9 @@
                             <select id="status" class="form-control" name="status" required>
                                 <option value="" disabled>Select status</option>
                                 <option value="Completed"
-                                        th:selected="${session.status == 'Completed'}">Completed</option>
+                                        th:selected="${labSession.status == 'Completed'}">Completed</option>
                                 <option value="Ongoing"
-                                        th:selected="${session.status == 'Ongoing'}">Ongoing</option>
+                                        th:selected="${labSession.status == 'Ongoing'}">Ongoing</option>
                             </select>
                         </div>
 

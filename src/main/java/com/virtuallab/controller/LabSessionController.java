@@ -93,7 +93,7 @@ public class LabSessionController {
     public String showAddForm(HttpSession session, Model model) {
         if (!isLoggedIn(session))
             return "redirect:/login";
-        model.addAttribute("session", new LabSession());
+        model.addAttribute("labSession", new LabSession());
         model.addAttribute("isEdit", false);
         model.addAttribute("academicYears", getAcademicYears());
         model.addAttribute("username", session.getAttribute("username"));
@@ -114,7 +114,7 @@ public class LabSessionController {
             return "redirect:/records";
         }
 
-        model.addAttribute("session", opt.get());
+        model.addAttribute("labSession", opt.get());
         model.addAttribute("isEdit", true);
         model.addAttribute("academicYears", getAcademicYears());
         model.addAttribute("username", session.getAttribute("username"));
