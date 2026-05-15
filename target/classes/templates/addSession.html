@@ -96,13 +96,6 @@
                                    required/>
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label" for="numberOfStudents">Number of Students *</label>
-                            <input id="numberOfStudents" class="form-control" type="number"
-                                   name="numberOfStudents" min="1" max="500"
-                                   placeholder="e.g. 60"
-                                   th:value="${labSession.numberOfStudents}" required/>
-                        </div>
 
                         <div class="form-group">
                             <label class="form-label" for="status">Status *</label>
@@ -117,6 +110,54 @@
 
                     </div><!-- /form-grid -->
 
+                    <!-- ── Student Entries ── -->
+                    <input type="hidden" id="numberOfStudents" name="numberOfStudents" th:value="${labSession.numberOfStudents}" />
+
+                    <div class="students-section">
+                        <div class="students-header">
+                            <h4>👨‍🎓 Student Details</h4>
+                            <div class="students-header-right">
+                                <span class="student-count-badge" id="studentCountBadge">0 students</span>
+                                <button type="button" class="btn btn-primary btn-sm" id="addStudentBtn" onclick="addStudentRow()">+ Add Student</button>
+                            </div>
+                        </div>
+                        <div class="students-table-wrap">
+                            <table class="data-table" id="studentsTable">
+                                <thead>
+                                    <tr>
+                                        <th style="width:50px">#</th>
+                                        <th>Roll No</th>
+                                        <th>Student Name</th>
+                                        <th style="width:60px">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="studentTableBody">
+                                    <!-- Existing students (edit mode) -->
+                                    <tr th:each="student, iterStat : ${labSession.students}" class="student-row">
+                                        <td class="row-number" th:text="${iterStat.index + 1}"></td>
+                                        <td>
+                                            <input type="text" class="form-control form-control-sm"
+                                                   th:name="'studentRollNos'" placeholder="e.g. CS101"
+                                                   th:value="${student.rollNo}" required />
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control form-control-sm"
+                                                   th:name="'studentNames'" placeholder="e.g. John Doe"
+                                                   th:value="${student.name}" required />
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger btn-sm btn-icon" onclick="removeStudentRow(this)" title="Remove">🗑</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="empty-students" id="emptyStudents">
+                                <span class="empty-icon">📭</span>
+                                <p>No students added yet. Click <strong>"+ Add Student"</strong> to begin.</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <div style="display:flex;gap:12px;margin-top:28px;">
                         <button type="submit" class="btn btn-primary">
                             <span th:text="${isEdit} ? '💾 Update Session' : '➕ Save Session'">Save</span>
@@ -128,5 +169,56 @@
         </div>
     </main>
 </div>
+
+<script>
+    let rowCounter = document.querySelectorAll('.student-row').length;
+
+    function addStudentRow() {
+        rowCounter++;
+        const tbody = document.getElementById('studentTableBody');
+        const tr = document.createElement('tr');
+        tr.className = 'student-row';
+        tr.style.animation = 'fadeInUp 0.25s ease';
+        tr.innerHTML = `
+            <td class="row-number">${rowCounter}</td>
+            <td><input type="text" class="form-control form-control-sm" name="studentRollNos" placeholder="e.g. CS101" required /></td>
+            <td><input type="text" class="form-control form-control-sm" name="studentNames" placeholder="e.g. John Doe" required /></td>
+            <td><button type="button" class="btn btn-danger btn-sm btn-icon" onclick="removeStudentRow(this)" title="Remove">🗑</button></td>
+        `;
+        tbody.appendChild(tr);
+        updateStudentCount();
+        tr.querySelector('input').focus();
+    }
+
+    function removeStudentRow(btn) {
+        const row = btn.closest('tr');
+        row.style.animation = 'fadeOut 0.2s ease forwards';
+        setTimeout(() => {
+            row.remove();
+            renumberRows();
+            updateStudentCount();
+        }, 200);
+    }
+
+    function renumberRows() {
+        const rows = document.querySelectorAll('#studentTableBody .student-row');
+        rows.forEach((row, i) => {
+            row.querySelector('.row-number').textContent = i + 1;
+        });
+        rowCounter = rows.length;
+    }
+
+    function updateStudentCount() {
+        const count = document.querySelectorAll('#studentTableBody .student-row').length;
+        document.getElementById('numberOfStudents').value = count;
+        const badge = document.getElementById('studentCountBadge');
+        badge.textContent = count + (count === 1 ? ' student' : ' students');
+        document.getElementById('emptyStudents').style.display = count > 0 ? 'none' : 'flex';
+        document.getElementById('studentsTable').style.display = count > 0 ? 'table' : 'none';
+    }
+
+    // Initialize on page load
+    updateStudentCount();
+</script>
 </body>
 </html>

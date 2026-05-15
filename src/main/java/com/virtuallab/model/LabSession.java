@@ -37,7 +37,7 @@ public class LabSession {
     @Column(length = 100)
     private String department;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "lab_session_id")
     private List<Student> students = new ArrayList<>();
 

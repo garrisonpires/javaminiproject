@@ -644,3 +644,94 @@ body {
     .stats-grid { grid-template-columns: 1fr; }
     .login-card { padding: 32px 24px; }
 }
+
+/* ============================================================
+   STUDENT ENTRIES SECTION
+   ============================================================ */
+
+.students-section {
+    margin-top: 32px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: rgba(99,102,241,0.03);
+    overflow: hidden;
+}
+
+.students-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(99,102,241,0.06);
+}
+
+.students-header h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.students-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.student-count-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 14px;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: rgba(99,102,241,0.15);
+    color: #a5b4fc;
+    letter-spacing: 0.02em;
+}
+
+.students-table-wrap {
+    padding: 0;
+}
+
+.students-table-wrap .data-table {
+    margin-bottom: 0;
+}
+
+.students-table-wrap .data-table tbody td {
+    padding: 8px 16px;
+}
+
+.form-control-sm {
+    padding: 7px 10px;
+    font-size: 0.82rem;
+}
+
+.btn-icon {
+    padding: 5px 8px;
+    min-width: 32px;
+    justify-content: center;
+}
+
+.empty-students {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+    gap: 8px;
+}
+
+.empty-students .empty-icon {
+    font-size: 2.2rem;
+}
+
+.empty-students p {
+    font-size: 0.85rem;
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: translateX(0); }
+    to   { opacity: 0; transform: translateX(20px); }
+}

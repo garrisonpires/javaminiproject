@@ -1,6 +1,7 @@
 package com.virtuallab.controller;
 
 import com.virtuallab.model.LabSession;
+import com.virtuallab.model.Student;
 import com.virtuallab.repository.LabSessionRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,9 +131,11 @@ public class LabSessionController {
             @RequestParam String labName,
             @RequestParam String facultyInCharge,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateOfConduct,
-            @RequestParam Integer numberOfStudents,
+            @RequestParam(required = false) Integer numberOfStudents,
             @RequestParam String status,
             @RequestParam(required = false) String department,
+            @RequestParam(required = false) List<String> studentRollNos,
+            @RequestParam(required = false) List<String> studentNames,
             HttpSession session,
             RedirectAttributes ra) {
         if (!isLoggedIn(session))
@@ -145,11 +148,24 @@ public class LabSessionController {
         labSession.setLabName(labName);
         labSession.setFacultyInCharge(facultyInCharge);
         labSession.setDateOfConduct(dateOfConduct);
-        labSession.setNumberOfStudents(numberOfStudents);
         labSession.setStatus(status);
         if (department != null) {
             labSession.setDepartment(department);
         }
+
+        // Build student list from form data and auto-compute numberOfStudents
+        labSession.getStudents().clear();
+        if (studentRollNos != null && studentNames != null) {
+            int count = Math.min(studentRollNos.size(), studentNames.size());
+            for (int i = 0; i < count; i++) {
+                String rollNo = studentRollNos.get(i).trim();
+                String name = studentNames.get(i).trim();
+                if (!rollNo.isEmpty() && !name.isEmpty()) {
+                    labSession.getStudents().add(new Student(rollNo, name));
+                }
+            }
+        }
+        labSession.setNumberOfStudents(labSession.getStudents().size());
 
         repo.save(labSession);
         ra.addFlashAttribute("success", (id != null) ? "Record updated successfully!" : "Record added successfully!");
